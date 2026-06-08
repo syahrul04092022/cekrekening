@@ -895,19 +895,9 @@ let up=line.toUpperCase();
 
 let matches = data.filter(d => {
 
-    let namaDB = d.nama
-        .toUpperCase()
-        .replace(/\s+/g,' ')
-        .trim();
-
-    let lineFix = up
-        .replace(/\s+/g,' ')
-        .trim();
-
     let rekDB = d.rek.toString().trim();
 
-    return lineFix.includes(namaDB) &&
-           lineFix.includes(rekDB);
+    return up.includes(rekDB);
 
 });
 
