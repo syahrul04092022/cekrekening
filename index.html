@@ -520,7 +520,7 @@ LOGIN ADMIN
 <select id="bank">
 <option>BCA</option>
 <option>BRI</option>
-<option>BNI</option>
+<option>BNI WONDER</option>
 <option>MANDIRI</option>
 <option>CIMB</option>
 <option>DANAMON</option>
@@ -893,24 +893,52 @@ lines.forEach(line=>{
 
 let up=line.toUpperCase();
 
-let hit=data.find(d=>
+let matches = data.filter(d => {
 
-up.includes((d.nama || '').toUpperCase()) &&
-up.includes((d.rek || '').toUpperCase())
+    let namaDB = d.nama
+        .toUpperCase()
+        .replace(/\s+/g,' ')
+        .trim();
 
-);
+    let lineFix = up
+        .replace(/\s+/g,' ')
+        .trim();
 
-if(hit){
+    let rekDB = d.rek.toString().trim();
+
+    return lineFix.includes(namaDB) &&
+           lineFix.includes(rekDB);
+
+});
+
+if(matches.length){
+
+matches.forEach(hit=>{
 
 foundCount++;
 
-copyResult += `${hit.bank} | ${hit.rek} | ${hit.nama} | ${hit.jenis}\n`;
+let statusText = hit.status || 'Masih Aktif Digunakan';
+
+copyResult += `${hit.bank} | ${hit.rek} | ${hit.nama} | ${hit.jenis} | ${statusText}\n`;
+
+let badgeClass =
+statusText === 'Sedang Dioffkan'
+? 'status-off'
+: statusText === 'Rekening Sudah Dicabut'
+? 'status-cabut'
+: 'status-aktif';
 
 foundHTML += `
 <div class="mass-found">
 ✅ ${hit.bank} | ${hit.rek} | ${hit.nama} | ${hit.jenis}
+<br><br>
+<span class="status-badge ${badgeClass}">
+${statusText}
+</span>
 </div>
 `;
+
+});
 
 }else{
 
